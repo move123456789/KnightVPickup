@@ -1,0 +1,94 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>KnightVPickup</AssemblyName>
+    <Description>Pickup Knight V</Description>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>KnightVPickup</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="bolt">
+      <HintPath>NewLibs\bolt.dll</HintPath>
+    </Reference>
+    <Reference Include="Bolt.Unity">
+      <HintPath>NewLibs\Bolt.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="bolt.user">
+      <HintPath>NewLibs\bolt.user.dll</HintPath>
+    </Reference>
+    <Reference Include="Endnight">
+      <HintPath>NewLibs\Endnight.dll</HintPath>
+    </Reference>
+    <Reference Include="FMOD.Unity">
+      <HintPath>NewLibs\FMOD.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>NewLibs\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="NGUI">
+      <HintPath>NewLibs\NGUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons">
+      <HintPath>NewLibs\Sons.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Gameplay.GameSetup">
+      <HintPath>NewLibs\Sons.Gameplay.GameSetup.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Gui">
+      <HintPath>NewLibs\Sons.Gui.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Physics">
+      <HintPath>NewLibs\Sons.Physics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Save">
+      <HintPath>NewLibs\Sons.Save.dll</HintPath>
+    </Reference>
+    <Reference Include="TheForest.Commons">
+      <HintPath>NewLibs\TheForest.Commons.dll</HintPath>
+    </Reference>
+    <Reference Include="TheForest.Modding">
+      <HintPath>NewLibs\TheForest.Modding.dll</HintPath>
+    </Reference>
+    <Reference Include="TheForest.Utils">
+      <HintPath>NewLibs\TheForest.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>NewLibs\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>NewLibs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>NewLibs\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>NewLibs\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>NewLibs\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>NewLibs\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>NewLibs\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>NewLibs\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
