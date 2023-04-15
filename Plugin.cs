@@ -25,7 +25,7 @@ public class Plugin : BasePlugin
 {
     public const string PLUGIN_GUID = "Smokyace.KnightVPickup";
     public const string PLUGIN_NAME = "KnightVPickup";
-    public const string PLUGIN_VERSION = "1.0.0";
+    public const string PLUGIN_VERSION = "1.0.1";
     private const string author = "SmokyAce";
 
     public static ConfigFile configFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "KnightVPickup.cfg"), true);
@@ -189,41 +189,25 @@ public class Plugin : BasePlugin
                             IsBusy = false;
                         } else
                         {
-                            try
-                            {
-                                BoltEntity entity = secondParent.gameObject.GetComponent<BoltEntity>();
-                                PostLogsToConsole(false, "Entity IsOwner = " + entity.isOwner);
-                                PostLogsToConsole(false, "Entity Has Control = " + entity.hasControl);
-                                if (entity.isOwner)
-                                {
-                                    isKnightVPickedUp = true;
-                                    Destroy(secondParent.gameObject);
-                                    IsBusy = false;
-                                }
-                                else
-                                {
-                                    NetworkId netID = entity.networkId;
-                                    PostLogsToConsole(false, "Network id = " + netID);
-
-                                    Mache.Networking.EventDispatcher.RaiseEvent(new NonHostKnightVPickupEvent
-                                    {
-                                        Message = "Destroy KnightV World Object!",
-                                        MessageCount = 1,
-                                        DoDestroy = true,
-                                        NetworkID = netID.ToString(),
-                                    });
-
-                                    isKnightVPickedUp = true;
-                                    IsBusy = false;
-                                }
-                            }
-
-                            catch (Exception e)
-                            {
-                                Plugin.PostLogsToConsole(false, "Catched: " + e);
-                            }
-                        }
                             
+                            BoltEntity entity = secondParent.gameObject.GetComponent<BoltEntity>();
+                            PostLogsToConsole(false, "Entity IsOwner = " + entity.isOwner);
+                            NetworkId netID = entity.networkId;
+                            PostLogsToConsole(false, "Network id = " + netID);
+
+                            Mache.Networking.EventDispatcher.RaiseEvent(new NonHostKnightVPickupEvent
+                            {
+                                Message = "Destroy KnightV World Object!",
+                                MessageCount = 1,
+                                DoDestroy = true,
+                                NetworkID = netID.ToString(),
+                            });
+
+                            isKnightVPickedUp = true;
+                            IsBusy = false;
+                                
+                        }
+  
                     }
 
                 } 
