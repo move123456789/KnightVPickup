@@ -14,11 +14,9 @@ using Sons.Gameplay.GPS;
 using TMPro;
 using Bolt;
 using BoltInternal;
-using Sons.Inventory;
-using Endnight.Utilities;
-using Sons.TerrainDetail;
-using Endnight.Extensions;
-using Sons.Player;
+using static KnightVPickup.CustomKnightVEvents;
+using System;
+using Sons.Gameplay.GameSetup;
 
 namespace KnightVPickup;
 
@@ -113,6 +111,7 @@ public class Plugin : BasePlugin
         public static void loadUI()
         {
             PostLogsToConsole(false, "In LoadUI From KnightVPickup");
+            Mache.Networking.EventDispatcher.RegisterEvent<NonHostKnightVPickupEvent>();
             if (smokyaceDeactivateUI.Value)
             {
                 return;
@@ -183,10 +182,50 @@ public class Plugin : BasePlugin
                     PostLogsToConsole(false, "secondParent GameObject Name = " + secondParent.gameObject.name);
                     if (secondParent.gameObject.name == "KnightVPickup(Clone)")
                     {
-                        isKnightVPickedUp = true;
-                        Destroy(secondParent.gameObject);
-                        IsBusy = false;
+                        if (GameSetupManager._instance._saveGameType == SaveGameType.SinglePlayer || GameSetupManager._instance._saveGameType == SaveGameType.Multiplayer)
+                        {
+                            isKnightVPickedUp = true;
+                            Destroy(secondParent.gameObject);
+                            IsBusy = false;
+                        } else
+                        {
+                            try
+                            {
+                                BoltEntity entity = secondParent.gameObject.GetComponent<BoltEntity>();
+                                PostLogsToConsole(false, "Entity IsOwner = " + entity.isOwner);
+                                PostLogsToConsole(false, "Entity Has Control = " + entity.hasControl);
+                                if (entity.isOwner)
+                                {
+                                    isKnightVPickedUp = true;
+                                    Destroy(secondParent.gameObject);
+                                    IsBusy = false;
+                                }
+                                else
+                                {
+                                    NetworkId netID = entity.networkId;
+                                    PostLogsToConsole(false, "Network id = " + netID);
+
+                                    Mache.Networking.EventDispatcher.RaiseEvent(new NonHostKnightVPickupEvent
+                                    {
+                                        Message = "Destroy KnightV World Object!",
+                                        MessageCount = 1,
+                                        DoDestroy = true,
+                                        NetworkID = netID.ToString(),
+                                    });
+
+                                    isKnightVPickedUp = true;
+                                    IsBusy = false;
+                                }
+                            }
+
+                            catch (Exception e)
+                            {
+                                Plugin.PostLogsToConsole(false, "Catched: " + e);
+                            }
+                        }
+                            
                     }
+
                 } 
             }
             IsBusy = false;
