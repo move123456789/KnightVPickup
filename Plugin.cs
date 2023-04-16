@@ -107,6 +107,10 @@ public class Plugin : BasePlugin
             {
                 KnightVPatcher.loadUI();
             }
+            if (PopUp.knightVPanel == null)
+            {
+                PopUp.CreateUI();
+            }
         }
         public static void loadUI()
         {
@@ -130,7 +134,7 @@ public class Plugin : BasePlugin
             KnightVPatcher.KnightVWarningText.rectTransform.localPosition = new Vector3(0f, 0f, 0f);
             KnightVPatcher.KnightVWarningText.rectTransform.offsetMax = new Vector2(500, 25);
             KnightVPatcher.DropKnightVWarningTextPriv.transform.localScale = new Vector3(1, 1, 1);
-            KnightVPatcher.DropKnightVWarningTextPriv.transform.localPosition = new Vector3(0f, 180f, 0f);
+            KnightVPatcher.DropKnightVWarningTextPriv.transform.localPosition = new Vector3(0f, 220f, 0f);
             KnightVPatcher.DropKnightVWarningTextPriv.SetActive(false);
         }
         public static GameObject DropKnightVWarningTextPriv;
@@ -154,6 +158,10 @@ public class Plugin : BasePlugin
                 {
                     PostLogsToConsole(false, "KnightVPickup From Ground Event");
                     PickUpGliderFast();
+                    if (PopUp.knightVPanel != null)
+                    {
+                        PopUp.DiplayKnightVPickUp();
+                    }
                 }
                 else
                 {
