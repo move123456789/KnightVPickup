@@ -5,16 +5,12 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using UnityEngine;
 using System.IO;
-using TheForest;
 using TheForest.Utils;
-using Sons.Gameplay;
 using Sons.Save;
 using Sons.Gui;
 using Sons.Gameplay.GPS;
 using TMPro;
 using Bolt;
-using BoltInternal;
-using static KnightVPickup.CustomKnightVEvents;
 using System;
 using Sons.Gameplay.GameSetup;
 
@@ -25,7 +21,7 @@ public class Plugin : BasePlugin
 {
     public const string PLUGIN_GUID = "Smokyace.KnightVPickup";
     public const string PLUGIN_NAME = "KnightVPickup";
-    public const string PLUGIN_VERSION = "1.0.1";
+    public const string PLUGIN_VERSION = "1.0.2";
     private const string author = "SmokyAce";
 
     public static ConfigFile configFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "KnightVPickup.cfg"), true);
@@ -66,7 +62,12 @@ public class Plugin : BasePlugin
             }
         }
     }
-    
+
+    public static void PostErrorToConsole(string messange)
+    {
+        DLog.LogInfo(messange);
+    }
+
 
     public class KnightVPatcher
     {
@@ -115,7 +116,6 @@ public class Plugin : BasePlugin
         public static void loadUI()
         {
             PostLogsToConsole(false, "In LoadUI From KnightVPickup");
-            Mache.Networking.EventDispatcher.RegisterEvent<NonHostKnightVPickupEvent>();
             if (smokyaceDeactivateUI.Value)
             {
                 return;
@@ -198,18 +198,35 @@ public class Plugin : BasePlugin
                         } else
                         {
                             
-                            BoltEntity entity = secondParent.gameObject.GetComponent<BoltEntity>();
-                            PostLogsToConsole(false, "Entity IsOwner = " + entity.isOwner);
-                            NetworkId netID = entity.networkId;
-                            PostLogsToConsole(false, "Network id = " + netID);
+                            BoltEntity kinghtVEntity = secondParent.gameObject.GetComponent<BoltEntity>();
+                            PostLogsToConsole(false, "Entity IsOwner = " + kinghtVEntity.isOwner);
+                            PostLogsToConsole(false, "Entity Has Control = " + kinghtVEntity.hasControl);
 
-                            Mache.Networking.EventDispatcher.RaiseEvent(new NonHostKnightVPickupEvent
+                            try
                             {
-                                Message = "Destroy KnightV World Object!",
-                                MessageCount = 1,
-                                DoDestroy = true,
-                                NetworkID = netID.ToString(),
-                            });
+                                DestroyPickUp destroyPickUp;
+                                if (kinghtVEntity.source == null)
+                                {
+                                    destroyPickUp = DestroyPickUp.Create(GlobalTargets.OnlySelf);
+                                    PostLogsToConsole(false, "IN: DestroyPickUp.Create(GlobalTargets.OnlySelf)");
+                                }
+                                else
+                                {
+                                    destroyPickUp = DestroyPickUp.Create(kinghtVEntity.source);
+                                    PostLogsToConsole(false, "IN: DestroyPickUp.Create(kinghtVEntity.source)");
+                                }
+                                destroyPickUp.PickUpPlayer = LocalPlayer.Entity;
+                                destroyPickUp.PickUpEntity = kinghtVEntity;
+                                destroyPickUp.ItemId = 626;
+                                destroyPickUp.SibblingId = -1;
+                                destroyPickUp.FakeDrop = false;
+                                destroyPickUp.Send();
+                                IsBusy = false;
+                            }
+                            catch (Exception e)
+                            {
+                                PostErrorToConsole("Something went wrong in PickUpGliderFast(KNIGHTV), Error: " + e);
+                            }
 
                             isKnightVPickedUp = true;
                             IsBusy = false;

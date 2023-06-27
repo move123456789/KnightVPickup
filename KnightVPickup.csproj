@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>NewLibs\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="bolt">
       <HintPath>NewLibs\bolt.dll</HintPath>
     </Reference>
@@ -30,11 +33,20 @@
     <Reference Include="bolt.user">
       <HintPath>NewLibs\bolt.user.dll</HintPath>
     </Reference>
+    <Reference Include="BulletBallistics">
+      <HintPath>NewLibs\BulletBallistics.dll</HintPath>
+    </Reference>
+    <Reference Include="com.rlabrecque.steamworks.net">
+      <HintPath>NewLibs\com.rlabrecque.steamworks.net.dll</HintPath>
+    </Reference>
     <Reference Include="Endnight">
       <HintPath>NewLibs\Endnight.dll</HintPath>
     </Reference>
     <Reference Include="FMOD.Unity">
       <HintPath>NewLibs\FMOD.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>NewLibs\Il2CppInterop.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>NewLibs\Il2Cppmscorlib.dll</HintPath>
@@ -45,6 +57,9 @@
     <Reference Include="NGUI">
       <HintPath>NewLibs\NGUI.dll</HintPath>
     </Reference>
+    <Reference Include="RenderStreamDepth">
+      <HintPath>NewLibs\RenderStreamDepth.dll</HintPath>
+    </Reference>
     <Reference Include="Sons">
       <HintPath>NewLibs\Sons.dll</HintPath>
     </Reference>
@@ -54,11 +69,32 @@
     <Reference Include="Sons.Gui">
       <HintPath>NewLibs\Sons.Gui.dll</HintPath>
     </Reference>
+    <Reference Include="Sons.Gui.Multiplayer">
+      <HintPath>NewLibs\Sons.Gui.Multiplayer.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Gui.Multiplayer.Notifications">
+      <HintPath>NewLibs\Sons.Gui.Multiplayer.Notifications.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Item">
+      <HintPath>NewLibs\Sons.Item.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Multiplayer">
+      <HintPath>NewLibs\Sons.Multiplayer.dll</HintPath>
+    </Reference>
     <Reference Include="Sons.Physics">
       <HintPath>NewLibs\Sons.Physics.dll</HintPath>
     </Reference>
+    <Reference Include="Sons.Rendering">
+      <HintPath>NewLibs\Sons.Rendering.dll</HintPath>
+    </Reference>
     <Reference Include="Sons.Save">
       <HintPath>NewLibs\Sons.Save.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.StatSystem">
+      <HintPath>NewLibs\Sons.StatSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Sons.Weapon">
+      <HintPath>NewLibs\Sons.Weapon.dll</HintPath>
     </Reference>
     <Reference Include="TheForest.Commons">
       <HintPath>NewLibs\TheForest.Commons.dll</HintPath>
@@ -68,6 +104,21 @@
     </Reference>
     <Reference Include="TheForest.Utils">
       <HintPath>NewLibs\TheForest.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.CrossSceneReference">
+      <HintPath>NewLibs\Unity.CrossSceneReference.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.BatchRendererGroup-Testing">
+      <HintPath>NewLibs\Unity.RenderPipelines.BatchRendererGroup-Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>NewLibs\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime">
+      <HintPath>NewLibs\Unity.RenderPipelines.HighDefinition.Config.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
+      <HintPath>NewLibs\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>NewLibs\Unity.TextMeshPro.dll</HintPath>
@@ -87,11 +138,17 @@
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>NewLibs\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>NewLibs\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>NewLibs\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>NewLibs\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UniverseLib.IL2CPP.Interop">
+      <HintPath>NewLibs\UniverseLib.IL2CPP.Interop.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
