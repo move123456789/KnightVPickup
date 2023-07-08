@@ -13,6 +13,7 @@ using TMPro;
 using Bolt;
 using System;
 using Sons.Gameplay.GameSetup;
+using System.Reflection;
 
 namespace KnightVPickup;
 
@@ -21,7 +22,7 @@ public class Plugin : BasePlugin
 {
     public const string PLUGIN_GUID = "Smokyace.KnightVPickup";
     public const string PLUGIN_NAME = "KnightVPickup";
-    public const string PLUGIN_VERSION = "1.0.2";
+    public const string PLUGIN_VERSION = "1.0.3";
     private const string author = "SmokyAce";
 
     public static ConfigFile configFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "KnightVPickup.cfg"), true);
@@ -33,10 +34,14 @@ public class Plugin : BasePlugin
     public static ConfigEntry<bool> smokyaceLogSphereObjects = configFile.Bind("Advanced", "LogSphereObjects", false, new ConfigDescription("If true colliders in scan sphere will post", null, "Advanced"));
 
 
-    public static ManualLogSource DLog = new ManualLogSource("DLog");
+    internal static string dllPath = Assembly.GetExecutingAssembly().Location;
+    internal static string directory = Path.GetDirectoryName(dllPath);
+    internal static string fileDir = Path.Join(directory, "KnightVData");
+
+    public static ManualLogSource KnightVPickup = new ManualLogSource("KnightVPickup");
     public override void Load()
     {
-        BepInEx.Logging.Logger.Sources.Add(DLog);
+        BepInEx.Logging.Logger.Sources.Add(KnightVPickup);
 
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
@@ -46,108 +51,96 @@ public class Plugin : BasePlugin
         //For Mono Behavior
         base.AddComponent<KnightVPickuper>();
 
+        // Data Folder
+        if (!Directory.Exists(fileDir))
+        {
+            Directory.CreateDirectory(fileDir);
+        }
     }
 
     public static void PostLogsToConsole(bool timeDelay, string messange)
     {
         if (!timeDelay && smokyaceLogToConsole.Value)
         {
-            DLog.LogInfo(messange);
+            KnightVPickup.LogInfo(messange);
         }
         else if (timeDelay && smokyaceLogToConsole.Value)
         {
             if (Time.frameCount % 15 == 0)
             {
-                DLog.LogInfo(messange);
+                KnightVPickup.LogInfo(messange);
             }
         }
     }
 
     public static void PostErrorToConsole(string messange)
     {
-        DLog.LogInfo(messange);
+        KnightVPickup.LogInfo(messange);
     }
 
 
     public class KnightVPatcher
     {
-        private static void DisplayWarning()
-        {
-            if (smokyaceDeactivateUI.Value)
-            {
-                return;
-            }
-            if (KnightVPickuper.isKnightVPickedUp)
-            {
-                PostLogsToConsole(false, "Display Warning On");
-                KnightVPatcher.DropKnightVWarningTextPriv.SetActive(true);
-            }
-            else
-            {
-                PostLogsToConsole(false, "Display Warning OFF");
-                KnightVPatcher.DropKnightVWarningTextPriv.SetActive(false);
-            }
-        }
-
-        [HarmonyPatch(typeof(PauseMenu), "TriggerQuitToTitle")]
-        [HarmonyPostfix]
-        public static void PostfixGetQuit(PauseMenu __instance)
-        {
-            PostLogsToConsole(false, "In Get Quit PostFix");
-            DisplayWarning();
-        }
 
         [HarmonyPatch(typeof(GPSTrackerSystem), "OnEnable")]
         [HarmonyPostfix]
         public static void OnEnablePostfix(ref GPSTrackerSystem __instance)
         {
             PostLogsToConsole(false, "IN From GPS OnEnablePostfix From KnightV");
-
-            bool flag = KnightVPatcher.DropKnightVWarningTextPriv == null;
-            if (flag)
-            {
-                KnightVPatcher.loadUI();
-            }
             if (PopUp.knightVPanel == null)
             {
                 PopUp.CreateUI();
             }
         }
-        public static void loadUI()
-        {
-            PostLogsToConsole(false, "In LoadUI From KnightVPickup");
-            if (smokyaceDeactivateUI.Value)
-            {
-                return;
-            }
-            GameObject gameObjectEscapePriv = GameObject.Find("ModalDialogManager");
-            GameObject DynamicModalDialogGuiPriv = gameObjectEscapePriv.transform.GetChild(0).gameObject;
-            GameObject PanelPriv = DynamicModalDialogGuiPriv.transform.GetChild(1).gameObject;
-            GameObject ContentPriv = PanelPriv.transform.GetChild(2).gameObject;
-            KnightVPatcher.DropKnightVWarningTextPriv = new GameObject("DropKnightVWarningText");
-            KnightVPatcher.KnightVWarningText = DropKnightVWarningTextPriv.gameObject.AddComponent<TextMeshProUGUI>();
-            KnightVPatcher.KnightVWarningText.SetText("DROP Knight V BEFORE QUITTING");
-            KnightVPatcher.KnightVWarningText.fontSize = 50f;
-            KnightVPatcher.KnightVWarningText.autoSizeTextContainer = true;
-            KnightVPatcher.KnightVWarningText.enableAutoSizing = true;
-            DropKnightVWarningTextPriv.transform.SetParent(ContentPriv.transform);
-            KnightVPatcher.KnightVWarningText.rectTransform.localPosition = new Vector3(0f, 0f, 0f);
-            KnightVPatcher.KnightVWarningText.rectTransform.offsetMax = new Vector2(500, 25);
-            KnightVPatcher.DropKnightVWarningTextPriv.transform.localScale = new Vector3(1, 1, 1);
-            KnightVPatcher.DropKnightVWarningTextPriv.transform.localPosition = new Vector3(0f, 220f, 0f);
-            KnightVPatcher.DropKnightVWarningTextPriv.SetActive(false);
-        }
-        public static GameObject DropKnightVWarningTextPriv;
-        public static TextMeshProUGUI KnightVWarningText;
 
+        [HarmonyPatch(typeof(GameSetupManager), "GetSelectedSaveId")]
+        [HarmonyPostfix]
+        public static void PostfixGetLoadedSaveID(uint __result)
+        {
+            PostLogsToConsole(false, "Postfix PostfixGetLoadedSaveID Loaded");
+            uint? nullable = __result;
+            if (nullable.HasValue)
+            {
+                PostLogsToConsole(false, "Save Id = " + __result);
+                KnightVPickuper.saveId = __result;
+            }
+            else { PostLogsToConsole(false, "SaveId Posfix __result Does Not Have A Value"); }
+
+        }
     }
 
-    
+    public class JSONData
+    {
+        public string DoHaveGlider { get; set; }
+    }
+
     public class KnightVPickuper : MonoBehaviour
     {
         public static bool isKnightVPickedUp = false;
         public static int KnightVId = 630;
         public static bool IsBusy = false;
+        private bool isQuitEventAdded;
+        private bool isInfoLoaded = false;
+        internal static uint saveId;
+
+        private void Quitting()
+        {
+            isQuitEventAdded = false;
+            if (saveId != 0)
+            {
+                var fileName = $"{Plugin.fileDir}/{KnightVPickuper.saveId}.json";
+
+                // Convert the boolean to a string
+                string KnightVPickedUpString = isKnightVPickedUp.ToString();
+
+                // Create the JSON string manually
+                string jsonString = "{ \"DoHaveKnightV\": \"" + KnightVPickedUpString + "\" }";
+
+                // Save the JSON string to a file
+                System.IO.File.WriteAllText(fileName, jsonString);
+            }
+            isInfoLoaded = false;
+        }
 
         private void Update()
         {
@@ -156,12 +149,8 @@ public class Plugin : BasePlugin
             {
                 if (!isKnightVPickedUp)
                 {
-                    PostLogsToConsole(false, "KnightVPickup From Ground Event");
-                    PickUpGliderFast();
-                    if (PopUp.knightVPanel != null)
-                    {
-                        PopUp.DiplayKnightVPickUp();
-                    }
+                    PostLogsToConsole(false, "isKnightVPickedUp From Ground Event");
+                    PickUpKnightVFast();
                 }
                 else
                 {
@@ -170,8 +159,38 @@ public class Plugin : BasePlugin
                     LocalPlayer.Inventory.AddItem(KnightVId, 1);
                 }
             }
+            if (!isInfoLoaded)
+            {
+                if (saveId != 0)
+                {
+                    isInfoLoaded = true;
+                    var filePath = $"{Plugin.fileDir}/{saveId}.json";
+                    PostLogsToConsole(false, $"Loading File, does file exisit: {System.IO.File.Exists(filePath)}");
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // READ THE DATA HERE
+                        string jsonString = System.IO.File.ReadAllText(filePath);
+
+                        // Parse the JSON manually
+                        string key = "\"DoHaveKnightV\": ";
+                        int startIndex = jsonString.IndexOf(key) + key.Length + 1;
+                        int endIndex = jsonString.IndexOf("\"", startIndex);
+                        string isKnightVPickedUpString = jsonString.Substring(startIndex, endIndex - startIndex);
+
+                        // Convert the string back to a boolean
+                        isKnightVPickedUp = bool.Parse(isKnightVPickedUpString);
+                        PostLogsToConsole(false, $"File Loaded isKnightVPickedUp STRING = {isKnightVPickedUpString}, isKnightVPickedUp BOOL: {bool.Parse(isKnightVPickedUpString)}");
+                    }
+                }
+            }
+            if (!isQuitEventAdded)
+            {
+                PostLogsToConsole(false, "Adding Quit Event");
+                isQuitEventAdded = true;
+                PauseMenu.add_OnQuitEvent((Il2CppSystem.Action)Quitting);
+            }
         }
-        public static void PickUpGliderFast()
+        public static void PickUpKnightVFast()
         {
             IsBusy = true;
             Collider[] hitColliders = Physics.OverlapSphere(LocalPlayer.Transform.position, 2, ~(1 << 26), QueryTriggerInteraction.Ignore);
@@ -195,9 +214,12 @@ public class Plugin : BasePlugin
                             isKnightVPickedUp = true;
                             Destroy(secondParent.gameObject);
                             IsBusy = false;
+                            if (PopUp.knightVPanel != null)
+                            {
+                                PopUp.DiplayKnightVPickUp();
+                            }
                         } else
                         {
-                            
                             BoltEntity kinghtVEntity = secondParent.gameObject.GetComponent<BoltEntity>();
                             PostLogsToConsole(false, "Entity IsOwner = " + kinghtVEntity.isOwner);
                             PostLogsToConsole(false, "Entity Has Control = " + kinghtVEntity.hasControl);
@@ -222,6 +244,10 @@ public class Plugin : BasePlugin
                                 destroyPickUp.FakeDrop = false;
                                 destroyPickUp.Send();
                                 IsBusy = false;
+                                if (PopUp.knightVPanel != null)
+                                {
+                                    PopUp.DiplayKnightVPickUp();
+                                }
                             }
                             catch (Exception e)
                             {
