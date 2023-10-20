@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ToniMacaroni/RedLoader/main/MetadataSchema.json",
+  "id": "KnightVAndGliderPickup",
+  "author": "SmokyAce",
+  "version": "1.0.0",
+  "description": "Pickup your Glider and KnightV right in to your inventory",
+  "gameVersion": "1.0.0",
+  "url": "..."
+}
