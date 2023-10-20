@@ -14,7 +14,6 @@ public class KnightVAndGliderPickup : SonsMod
     {
         // Don't register any update callbacks here. Manually register them instead.
         // Removing this will call OnUpdate, OnFixedUpdate etc. even if you don't use them.
-        HarmonyPatchAll = true;
     }
 
     protected override void OnInitializeMod()
@@ -58,14 +57,19 @@ public class KnightVAndGliderPickup : SonsMod
         Extras.PostMsg("Running KnightVToInventory and GliderToInventory");
         KnightV.KnightVToInventory();
         Glider.GliderToInventory();
+
+        LoadSavedDataIntoGame();
     }
 
 
     private void Quitting()
     {
         Extras.isQuitEventAdded = false;
+        LocalPlayer.Inventory._inventoryCutscene.OnCutsceneEnded.RemoveListener((UnityEngine.Events.UnityAction)Glider.OnOpenInventory);
+        PauseMenu.remove_OnQuitEvent((Il2CppSystem.Action)Quitting);
         if (Extras._saveId != 0)
         {
+            Extras.PostMsg("Saving Data");
             if (LocalPlayer.Inventory._itemInstanceManager.HaveAny(626) && LocalPlayer.Inventory._itemInstanceManager.HaveAny(630))
             {
                 Data.SaveData(Extras._saveId, "1", "1");
@@ -85,5 +89,26 @@ public class KnightVAndGliderPickup : SonsMod
 
         } else { RLog.Error("SaveID == 0 In Qutting"); }
         
+    }
+
+    private void LoadSavedDataIntoGame()
+    {
+        if (LocalPlayer.Inventory._itemInstanceManager.HaveAny(626) && LocalPlayer.Inventory._itemInstanceManager.HaveAny(630)) { Extras.PostMsg("Glider and KnightV Alread In Inventory"); return; }
+        if (Extras._saveId == 0) { Extras.PostMsg("SaveId is 0 cant load data ino world"); return; }
+
+        var data = Data.GetData(Extras._saveId);
+        if (data != null)
+        {
+            Extras.PostMsg($"Glider: {data.glider}, Knightv: {data.knightv}");
+            if (data.glider == "1")
+            {
+                LocalPlayer.Inventory.AddItem(626, 1, false, false);
+            }
+            if (data.knightv == "1")
+            {
+                LocalPlayer.Inventory.AddItem(630, 1, false, false);
+            }
+
+        } else { Extras.PostMsg("No Data Found For World"); }
     }
 }

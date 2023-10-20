@@ -21,7 +21,8 @@ namespace KnightVAndGliderPickup
                 item._type = (Sons.Items.Core.Types)17;
                 item._canBeHotKeyed = true;
                 item._alwaysDropOnUnequip = false;
-                item._allowPickupWhenInventoryIsFull = true;
+                item._maxAmount = 1;
+                item._allowPickupWhenInventoryIsFull = false;
                 item.UiData._leftClick = (ItemUiData.LeftClickCommands)10;
                 item.UiData._rightClick = 0;
                 Transform original = LocalPlayer._instance._inventory._inventoryCutscene._inventory.transform.FindChild("LayoutGroups/_Unused_/KnightVLayoutGroup");

@@ -53,9 +53,12 @@ namespace KnightVAndGliderPickup
 
         internal static void WriteDynamicJsonObject(JsonObject jsonObj, string fileName)
         {
-            using var fileStream = File.Create("PlayerUpgradeStatsData/" + fileName);
+            string folderPath = Path.Combine(Extras.dataPath, Extras.saveFolder);
+            string fullPath = Path.Combine(folderPath, fileName);
+            using var fileStream = File.Create(fullPath);
             using var utf8JsonWriter = new Utf8JsonWriter(fileStream);
             jsonObj.WriteTo(utf8JsonWriter);
+            Extras.PostMsg("Data Saved");
         }
     }
 }
